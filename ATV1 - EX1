@@ -52,10 +52,9 @@ public class ExemploContadorCliques {
             contadorCliques.incrementarContagemCliques();
         }
 
-        // Remove o observador
+
         contadorCliques.removerObservador(observador);
 
-        // Simula mais alguns cliques (o observador removido não será notificado)
         for (int i = 0; i < 3; i++) {
             contadorCliques.incrementarContagemCliques();
         }
