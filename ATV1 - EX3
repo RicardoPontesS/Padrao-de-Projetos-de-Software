@@ -1,0 +1,57 @@
+import java.util.ArrayList;
+import java.util.List;
+
+interface ObservadorNoticias {
+    void onNovaNoticia(String novaNoticia);
+}
+
+class AgenciaNoticias {
+    private List<ObservadorNoticias> observadores = new ArrayList<>();
+    private String ultimaNoticia;
+
+    public void adicionarObservador(ObservadorNoticias observador) {
+        observadores.add(observador);
+    }
+
+    public void removerObservador(ObservadorNoticias observador) {
+        observadores.remove(observador);
+    }
+
+    public void publicarNoticia(String novaNoticia) {
+        ultimaNoticia = novaNoticia;
+        notificarObservadores();
+    }
+
+    public String getUltimaNoticia() {
+        return ultimaNoticia;
+    }
+
+    private void notificarObservadores() {
+        for (ObservadorNoticias observador : observadores) {
+            observador.onNovaNoticia(ultimaNoticia);
+        }
+    }
+}
+
+
+class ObservadorNoticiasImpl implements ObservadorNoticias {
+    @Override
+    public void onNovaNoticia(String novaNoticia) {
+        System.out.println("Nova notícia: " + novaNoticia);
+    }
+}
+
+public class SistemaNoticias {
+    public static void main(String[] args) {
+        AgenciaNoticias agencia = new AgenciaNoticias();
+        ObservadorNoticias observador = new ObservadorNoticiasImpl();
+
+        agencia.adicionarObservador(observador);
+
+        agencia.publicarNoticia("Lançamento de um novo produto!");
+
+        agencia.removerObservador(observador);
+
+        agencia.publicarNoticia("Resultado de uma pesquisa recente!");
+    }
+}
