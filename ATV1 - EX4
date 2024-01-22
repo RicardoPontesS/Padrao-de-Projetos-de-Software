@@ -1,0 +1,66 @@
+import java.util.ArrayList;
+import java.util.List;
+
+interface ObservadorEstoque {
+    void onQuantidadeProdutoAlterada(String produto, int novaQuantidade);
+}
+
+class SistemaEstoque {
+    private List<ObservadorEstoque> observadores = new ArrayList<>();
+    private int quantidadeProduto;
+    private String nomeProduto;
+
+    public SistemaEstoque(String nomeProduto, int quantidadeInicial) {
+        this.nomeProduto = nomeProduto;
+        this.quantidadeProduto = quantidadeInicial;
+    }
+
+    public void adicionarObservador(ObservadorEstoque observador) {
+        observadores.add(observador);
+    }
+
+    public void removerObservador(ObservadorEstoque observador) {
+        observadores.remove(observador);
+    }
+
+    public void atualizarQuantidadeProduto(int novaQuantidade) {
+        quantidadeProduto = novaQuantidade;
+        notificarObservadores();
+    }
+
+    public int getQuantidadeProduto() {
+        return quantidadeProduto;
+    }
+
+    public String getNomeProduto() {
+        return nomeProduto;
+    }
+
+    private void notificarObservadores() {
+        for (ObservadorEstoque observador : observadores) {
+            observador.onQuantidadeProdutoAlterada(nomeProduto, quantidadeProduto);
+        }
+    }
+}
+
+class ObservadorEstoqueImpl implements ObservadorEstoque {
+    @Override
+    public void onQuantidadeProdutoAlterada(String produto, int novaQuantidade) {
+        System.out.println("Quantidade do produto " + produto + " alterada para: " + novaQuantidade);
+    }
+}
+
+public class SistemaNotificacaoEstoque {
+    public static void main(String[] args) {
+        SistemaEstoque estoque = new SistemaEstoque("ProdutoA", 50);
+        ObservadorEstoque observador = new ObservadorEstoqueImpl();
+
+        estoque.adicionarObservador(observador);
+
+        estoque.atualizarQuantidadeProduto(40);
+
+        estoque.removerObservador(observador);
+
+        estoque.atualizarQuantidadeProduto(30);
+    }
+}
