@@ -1,0 +1,63 @@
+import java.util.ArrayList;
+import java.util.List;
+
+interface ObservadorChat {
+    void onNovaMensagem(String remetente, String mensagem);
+}
+
+class SalaChat {
+    private List<ObservadorChat> observadores = new ArrayList<>();
+
+    public void adicionarObservador(ObservadorChat observador) {
+        observadores.add(observador);
+    }
+
+    public void removerObservador(ObservadorChat observador) {
+        observadores.remove(observador);
+    }
+
+    public void enviarMensagem(String remetente, String mensagem) {
+        System.out.println("[" + remetente + "]: " + mensagem);
+
+        notificarObservadores(remetente, mensagem);
+    }
+
+    private void notificarObservadores(String remetente, String mensagem) {
+        for (ObservadorChat observador : observadores) {
+            observador.onNovaMensagem(remetente, mensagem);
+        }
+    }
+}
+
+class ObservadorChatImpl implements ObservadorChat {
+    private String nomeCliente;
+
+    public ObservadorChatImpl(String nomeCliente) {
+        this.nomeCliente = nomeCliente;
+    }
+
+    @Override
+    public void onNovaMensagem(String remetente, String mensagem) {
+        if (!remetente.equals(nomeCliente)) {
+            System.out.println("[" + nomeCliente + "]: Nova mensagem de [" + remetente + "]: " + mensagem);
+        }
+    }
+}
+
+public class SistemaChat {
+    public static void main(String[] args) {
+        SalaChat sala = new SalaChat();
+
+        ObservadorChat observador1 = new ObservadorChatImpl("Cliente1");
+        ObservadorChat observador2 = new ObservadorChatImpl("Cliente2");
+
+
+        sala.adicionarObservador(observador1);
+        sala.adicionarObservador(observador2);
+
+
+        sala.enviarMensagem("Cliente1", "Olá, alguém está aí?");
+        sala.enviarMensagem("Cliente2", "Sim, estou aqui!");
+        sala.enviarMensagem("Cliente1", "Como você está?");
+    }
+}
