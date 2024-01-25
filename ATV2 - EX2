@@ -1,0 +1,110 @@
+interface Texto {
+    void render();
+}
+
+class TextoBasico implements Texto {
+    private String conteudo;
+
+    public TextoBasico(String conteudo) {
+        this.conteudo = conteudo;
+    }
+
+    @Override
+    public void render() {
+        System.out.print(conteudo);
+    }
+}
+
+abstract class DecoradorTexto implements Texto {
+    protected Texto textoDecorado;
+
+    public DecoradorTexto(Texto textoDecorado) {
+        this.textoDecorado = textoDecorado;
+    }
+
+    @Override
+    public void render() {
+        textoDecorado.render();
+    }
+}
+
+class NegritoDecorator extends DecoradorTexto {
+    public NegritoDecorator(Texto textoDecorado) {
+        super(textoDecorado);
+    }
+
+    @Override
+    public void render() {
+        System.out.print("<b>");
+        super.render();
+        System.out.print("</b>");
+    }
+}
+
+class ItalicoDecorator extends DecoradorTexto {
+    public ItalicoDecorator(Texto textoDecorado) {
+        super(textoDecorado);
+    }
+
+    @Override
+    public void render() {
+        System.out.print("<i>");
+        super.render();
+        System.out.print("</i>");
+    }
+}
+
+class SublinhadoDecorator extends DecoradorTexto {
+    public SublinhadoDecorator(Texto textoDecorado) {
+        super(textoDecorado);
+    }
+
+    @Override
+    public void render() {
+        System.out.print("<u>");
+        super.render();
+        System.out.print("</u>");
+    }
+}
+
+class FonteDecorator extends DecoradorTexto {
+    private String fonte;
+
+    public FonteDecorator(Texto textoDecorado, String fonte) {
+        super(textoDecorado);
+        this.fonte = fonte;
+    }
+
+    @Override
+    public void render() {
+        System.out.print("<font face='" + fonte + "'>");
+        super.render();
+        System.out.print("</font>");
+    }
+}
+
+public class ExemploDecoratorTexto {
+    public static void main(String[] args) {
+        Texto textoSimples = new TextoBasico("Texto simples.");
+
+        Texto textoNegrito = new NegritoDecorator(textoSimples);
+        Texto textoItalico = new ItalicoDecorator(textoSimples);
+        Texto textoSublinhado = new SublinhadoDecorator(textoSimples);
+        Texto textoFonte = new FonteDecorator(textoSimples, "Arial");
+
+        System.out.println("Texto Simples:");
+        textoSimples.render();
+
+        System.out.println("\n\nTexto Negrito:");
+        textoNegrito.render();
+
+        System.out.println("\n\nTexto Itálico:");
+        textoItalico.render();
+
+        System.out.println("\n\nTexto Sublinhado:");
+        textoSublinhado.render();
+
+        System.out.println("\n\nTexto com Fonte Arial:");
+        textoFonte.render();
+    }
+}
