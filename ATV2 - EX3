@@ -1,0 +1,66 @@
+interface FiguraGeometrica {
+    void desenhar();
+}
+
+class FiguraGeometricaBasica implements FiguraGeometrica {
+    private String tipo;
+
+    public FiguraGeometricaBasica(String tipo) {
+        this.tipo = tipo;
+    }
+
+    @Override
+    public void desenhar() {
+        System.out.println("Desenhando " + tipo);
+    }
+}
+
+abstract class DecoradorFiguraGeometrica implements FiguraGeometrica {
+    protected FiguraGeometrica figuraDecorada;
+
+    public DecoradorFiguraGeometrica(FiguraGeometrica figuraDecorada) {
+        this.figuraDecorada = figuraDecorada;
+    }
+
+    @Override
+    public void desenhar() {
+        figuraDecorada.desenhar();
+    }
+}
+
+class CorDecorator extends DecoradorFiguraGeometrica {
+    private String cor;
+
+    public CorDecorator(FiguraGeometrica figuraDecorada, String cor) {
+        super(figuraDecorada);
+        this.cor = cor;
+    }
+
+    @Override
+    public void desenhar() {
+        System.out.println("Desenhando com cor " + cor);
+        super.desenhar();
+    }
+}
+
+public class ExemploDecoratorFiguraGeometrica {
+    public static void main(String[] args) {
+        FiguraGeometrica figuraRetangulo = new FiguraGeometricaBasica("Retângulo");
+        FiguraGeometrica figuraCirculo = new FiguraGeometricaBasica("Círculo");
+
+        FiguraGeometrica retanguloPreto = new CorDecorator(figuraRetangulo, "Preto");
+        FiguraGeometrica circuloVermelho = new CorDecorator(figuraCirculo, "Vermelho");
+
+        System.out.println("Figura Geométrica Básica:");
+        figuraRetangulo.desenhar();
+
+        System.out.println("\nFigura Geométrica Decorada - Cor Preto:");
+        retanguloPreto.desenhar();
+
+        System.out.println("\nFigura Geométrica Básica:");
+        figuraCirculo.desenhar();
+
+        System.out.println("\nFigura Geométrica Decorada - Cor Vermelho:");
+        circuloVermelho.desenhar();
+    }
+}
